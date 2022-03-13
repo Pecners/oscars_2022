@@ -3,28 +3,11 @@ library(ggstar)
 library(showtext)
 library(ggtext)
 library(geomtextpath)
+library(ggbeeswarm)
 library(glue)
 
-title_basics <- read_rds("data/title.basics.rda")
 
-movies <- title_basics %>%
-  filter(titleType == "movie")
-
-power_dog <- title_basics %>%
-  filter(originalTitle == "The Power of the Dog")
-
-being_ric <- title_basics %>%
-  filter(originalTitle == "Being the Ricardos")
-
-crew <- read_rds("data/title.crew.rda")
-principals <- read_rds("data/title.principals.rda")
-names <- read_rds("data/name.basics.rda")
-ratings <- read_rds("data/title.ratings.rda")
-
-movie_code <- "tt4995540"
-
-principals <- principals %>%
-  filter(tconst %in% movies$tconst)
+movie_code <- "tt10095582"
 
 pd_actors <- principals %>%
   filter(category %in% c("actor", "actress") &
@@ -78,14 +61,14 @@ actor_avg <- clean %>%
   summarise(avg = mean(averageRating))
 
 labels <- c(
-  glue("<img src='images/nicole_kidman.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Nicole Kidman**<br><span style='font-size:8pt'>(Best Actress Nominee)</span>"),
-  glue("<img src='images/javier_bardem.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Javier Bardem**<br><span style='font-size:8pt'>(Best Actor Nominee)</span>"),
-  glue("<img src='images/jk_simmons.jpg' height='75' style='border-radius:5px' /><br>",
-  "**J.K. Simmons**<br><span style='font-size:8pt'>(Best Supporting Actor Nominee)</span>"),
-  glue("<img src='images/nina_arianda.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Nina Arianda**")
+  glue("<img src='images/denzel_washington.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Denzel Washington**<br><span style='font-size:8pt'>(Best Actor Nominee)</span>"),
+  glue("<img src='images/frances_mcdormand.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Frances McDormand**"),
+  glue("<img src='images/alex_hassell.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Alex Hassell**"),
+  glue("<img src='images/bertie_carvel.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Bertie Carvel**")
 )
 
 pd_rating <- clean %>%
@@ -143,17 +126,26 @@ pd_plot <- clean %>%
                                        lineheight = 1.1),
         axis.text.x = element_markdown(size = 14, color = red),
         axis.text.y = element_text(color = red),
-        axis.title.y = element_markdown(color = red)) +
-  labs(title= "BEING THE RICARDOS",
+        axis.title.x = element_textbox(color = gold, size = 12,
+                                        halign = .5, fill = red,
+                                        padding = margin(2, 3, 2, 3),
+                                        margin = margin(b = 3),
+                                        linetype = 1,
+                                        r = unit(3, "pt")),
+        axis.title.y = element_textbox(color = gold, orientation = "left",
+                                       halign = .5, fill = red, size = 12,
+                                       padding = margin(2, 3, 2, 3),
+                                       margin = margin(b = 3),
+                                       linetype = 1,
+                                       r = unit(3, "pt"))) +
+  labs(title= "THE TRAGEDY OF MACBETH",
        subtitle = glue(
-         "Three of the four top-billed cast members for **Being the Ricardos** are ",
-         "nominated for an Oscar this year, though this would not be the first win ",
-         "for any of them. With an average IMDb rating of **{pd_rating}**, ",
-         "this film rates as slightly above average when measured against the rest of their ",
-         "extensive combined filmography."
+         "Denzel Washington has received a Best Actor Oscar nomination for his role in ",
+         "**The Tragedy of Macbeth** this year. With an IMDb rating of **{pd_rating}**, this film ",
+         "ranks among the better half of his extensive and well-regarded filmography. "
        ),
-       y = "**Average IMDb Rating**",
-       x = "",
+       y = "Average IMDb Rating",
+       x = "Principal Cast",
        caption = glue(
          "Each square represents a film from the cast member's filmography, ",
          "and the star represents the movie named in the plot title. Highest and lowest ",
@@ -165,5 +157,5 @@ pd_plot <- clean %>%
          "on March 9, 2022."
        ))
 
-ggsave(pd_plot, filename = "plots/being_the_ricardos.png", bg = "white",
+ggsave(pd_plot, filename = "plots/tragedy_of_macbeth.png", bg = "white",
        width = 9.5, height = 7.5)
