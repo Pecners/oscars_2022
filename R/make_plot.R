@@ -7,7 +7,7 @@ library(ggbeeswarm)
 library(glue)
 
 
-movie_code <- "tt10095582"
+movie_code <- "tt9115530"
 
 pd_actors <- principals %>%
   filter(category %in% c("actor", "actress") &
@@ -61,14 +61,14 @@ actor_avg <- clean %>%
   summarise(avg = mean(averageRating))
 
 labels <- c(
-  glue("<img src='images/denzel_washington.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Denzel Washington**<br><span style='font-size:8pt'>(Best Actor Nominee)</span>"),
-  glue("<img src='images/frances_mcdormand.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Frances McDormand**"),
-  glue("<img src='images/alex_hassell.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Alex Hassell**"),
-  glue("<img src='images/bertie_carvel.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Bertie Carvel**")
+  glue("<img src='images/jessica_chastain.jpeg' height='75' style='border-radius:5px' /><br>",
+  "**Jessica Chastain**<br><span style='font-size:8pt'>(Best Actress Nominee)</span>"),
+  glue("<img src='images/andrew_garfield.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Andrew Garfield**"),
+  glue("<img src='images/cherry_jones.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Cherry Jones**"),
+  glue("<img src='images/vincent_donofrio.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Vincent D'Onofrio**")
 )
 
 pd_rating <- clean %>%
@@ -100,7 +100,7 @@ pd_plot <- clean %>%
                         y = avg, yend = avg), color = red,
                     linetype = 2) +
   geom_text(data =  top_bottom,
-            aes(label = str_wrap(primaryTitle, 20),
+            aes(label = str_wrap(primaryTitle, 40),
                 y = ifelse(g == "max",
                                averageRating + .3, averageRating - .2)),
             color = red, family = "frl",
@@ -138,11 +138,11 @@ pd_plot <- clean %>%
                                        margin = margin(b = 3),
                                        linetype = 1,
                                        r = unit(3, "pt"))) +
-  labs(title= "THE TRAGEDY OF MACBETH",
+  labs(title= "THE EYES OF TAMMY FAYE",
        subtitle = glue(
-         "Denzel Washington has received a Best Actor Oscar nomination for his role in ",
-         "**The Tragedy of Macbeth** this year. With an IMDb rating of **{pd_rating}**, this film ",
-         "ranks among the better half of his extensive and well-regarded filmography. "
+         "Jessica Chastain received a Best Actress nomination this year for her role in ",
+         "**The Eyes of Tammy Faye**. With an IMDb rating of **{pd_rating}**, this movie is ",
+         "slightly above average for her overall filmography."
        ),
        y = "Average IMDb Rating",
        x = "Principal Cast",
@@ -157,5 +157,5 @@ pd_plot <- clean %>%
          "on March 9, 2022."
        ))
 
-ggsave(pd_plot, filename = "plots/tragedy_of_macbeth.png", bg = "white",
+ggsave(pd_plot, filename = "plots/eyes_of_tammy_faye.png", bg = "white",
        width = 9.5, height = 7.5)
