@@ -7,7 +7,7 @@ library(ggbeeswarm)
 library(glue)
 
 
-movie_code <- "tt9115530"
+movie_code <- "tt11286314"
 
 pd_actors <- principals %>%
   filter(category %in% c("actor", "actress") &
@@ -61,14 +61,14 @@ actor_avg <- clean %>%
   summarise(avg = mean(averageRating))
 
 labels <- c(
-  glue("<img src='images/jessica_chastain.jpeg' height='75' style='border-radius:5px' /><br>",
-  "**Jessica Chastain**<br><span style='font-size:8pt'>(Best Actress Nominee)</span>"),
-  glue("<img src='images/andrew_garfield.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Andrew Garfield**"),
-  glue("<img src='images/cherry_jones.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Cherry Jones**"),
-  glue("<img src='images/vincent_donofrio.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Vincent D'Onofrio**")
+  glue("<img src='images/leonardo_dicaprio.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Leonardo DiCaprio**"),
+  glue("<img src='images/jennifer_lawrence.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Jennifer Lawrence**"),
+  glue("<img src='images/meryl_streep.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Meryl Streep**"),
+  glue("<img src='images/cate_blanchett.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Cate Blanchett**")
 )
 
 pd_rating <- clean %>%
@@ -102,7 +102,8 @@ pd_plot <- clean %>%
   geom_text(data =  top_bottom,
             aes(label = str_wrap(primaryTitle, 40),
                 y = ifelse(g == "max",
-                               averageRating + .3, averageRating - .2)),
+                               averageRating + .3, 
+                           averageRating - (.2 * ceiling(str_length(primaryTitle) / 80)))),
             color = red, family = "frl",
             lineheight = .85, size = 3) +
   scale_color_identity() +
@@ -138,11 +139,12 @@ pd_plot <- clean %>%
                                        margin = margin(b = 3),
                                        linetype = 1,
                                        r = unit(3, "pt"))) +
-  labs(title= "THE EYES OF TAMMY FAYE",
+  labs(title= "DON'T LOOK UP",
        subtitle = glue(
-         "Jessica Chastain received a Best Actress nomination this year for her role in ",
-         "**The Eyes of Tammy Faye**. With an IMDb rating of **{pd_rating}**, this movie is ",
-         "slightly above average for her overall filmography."
+         "**Don't Look Up** received an Oscar nomination for Best Picture this year. ",
+         "With an average IMDb rating of **{pd_rating}**, this film is well above average for ",
+         "all principal cast members except Leonardo DiCaprio, for whom it is slightly below ",
+         "average. None of the cast members are nominated for an Oscar."
        ),
        y = "Average IMDb Rating",
        x = "Principal Cast",
@@ -157,5 +159,5 @@ pd_plot <- clean %>%
          "on March 9, 2022."
        ))
 
-ggsave(pd_plot, filename = "plots/eyes_of_tammy_faye.png", bg = "white",
+ggsave(pd_plot, filename = "plots/dont_look_up.png", bg = "white",
        width = 9.5, height = 7.5)
