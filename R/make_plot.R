@@ -6,13 +6,19 @@ library(geomtextpath)
 library(ggbeeswarm)
 library(glue)
 
+# Set movie code for plot
 
 movie_code <- "tt11286314"
+
+# Pull principal cast 
 
 pd_actors <- principals %>%
   filter(category %in% c("actor", "actress") &
            tconst == movie_code) %>%
   left_join(., names)
+
+# Create df with filmography of principal cast
+# including movie names, ratings, known_for
 
 all_movies <- principals %>%
   filter(category %in% c("actor", "actress") &
@@ -23,6 +29,8 @@ all_movies <- principals %>%
               select(tconst, 
                      primaryTitle,
                      startYear))
+
+# Clean up df 
 
 clean <- all_movies %>%
   filter(!is.na(averageRating)) %>%
@@ -39,6 +47,8 @@ clean <- all_movies %>%
          numVotes,
          is_known_for)
 
+# Set branding colors
+
 gold <- "#EBAB47"
 red <- "#89221B"
 blue <- "#191B7A"
@@ -46,6 +56,8 @@ blue <- "#191B7A"
 font_add_google("Frank Ruhl Libre", "frl")
 showtext_auto()
 showtext_opts(dpi = 100)
+
+# Get primary cast ordering
 
 order <- clean %>%
   filter(tconst == movie_code) %>%
@@ -56,9 +68,13 @@ order <- clean %>%
 clean <- clean %>%
   mutate(primaryName = factor(primaryName, levels = order$primaryName))
 
+# Get avg movie rating per actor
+
 actor_avg <- clean %>%
   group_by(primaryName) %>%
   summarise(avg = mean(averageRating))
+
+# Set labels that have the actor head shots
 
 labels <- c(
   glue("<img src='images/leonardo_dicaprio.jpg' height='75' style='border-radius:5px' /><br>",
@@ -71,10 +87,15 @@ labels <- c(
   "**Cate Blanchett**")
 )
 
+# Extract this movie average for use in subtitle
+
 pd_rating <- clean %>%
   filter(tconst == movie_code) %>%
   .[["averageRating"]] %>%
   unique()
+
+# Dataframe for top and bottom rated movies for each 
+# principal cast member
 
 top_bottom <- clean %>%
   group_by(primaryName) %>%
@@ -84,6 +105,8 @@ top_bottom <- clean %>%
   ungroup() %>%
   group_by(primaryName, averageRating) %>%
   filter(numVotes == max(numVotes)) 
+
+# Make the plot
 
 pd_plot <- clean %>%
   filter(tconst != movie_code) %>%
