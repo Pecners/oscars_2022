@@ -8,7 +8,7 @@ library(glue)
 
 # Set movie code for plot
 
-movie_code <- "tt11286314"
+movie_code <- "tt12536294"
 
 # Pull principal cast 
 
@@ -77,14 +77,14 @@ actor_avg <- clean %>%
 # Set labels that have the actor head shots
 
 labels <- c(
-  glue("<img src='images/leonardo_dicaprio.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Leonardo DiCaprio**"),
-  glue("<img src='images/jennifer_lawrence.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Jennifer Lawrence**"),
-  glue("<img src='images/meryl_streep.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Meryl Streep**"),
-  glue("<img src='images/cate_blanchett.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Cate Blanchett**")
+  glue("<img src='images/kristen_stewart.jpeg' height='75' style='border-radius:5px' /><br>",
+  "**Kristen Stewart**<br><span style='font-size:9pt'>(Best Actress Nominee)</span>"),
+  glue("<img src='images/timothy_spall.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Timothy Spall**"),
+  glue("<img src='images/jack_nielen.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Jack Nielen**"),
+  glue("<img src='images/freddie_spry.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Freddie Spry**")
 )
 
 # Extract this movie average for use in subtitle
@@ -111,35 +111,39 @@ top_bottom <- clean %>%
 pd_plot <- clean %>%
   filter(tconst != movie_code) %>%
   ggplot(aes(primaryName, averageRating)) +
-  geom_violin(data = clean, color = red, fill = red, alpha = .1) +
+  geom_violin(data = clean, color = red, fill = red, alpha = .1, 
+              scale = "count", width = .5) +
   geom_quasirandom(alpha = .3, width = .15, size = 2.5,
                    shape = 22, fill = red)  +
-  geom_star(data = clean %>%
-              filter(tconst == movie_code), alpha = .9,
-            fill = gold, size = 3) +
   geom_segment(data = actor_avg, inherit.aes = FALSE,
-                    aes(x = as.numeric(primaryName) - .5, 
-                        xend = as.numeric(primaryName) + .5,
+                    aes(x = as.numeric(primaryName) - (.75 / 2), 
+                        xend = as.numeric(primaryName) + (.75 / 2),
                         y = avg, yend = avg), color = red,
                     linetype = 2) +
+  geom_star(data = clean %>%
+              filter(tconst == movie_code), alpha = .9,
+            fill = gold, size = 4) +
   geom_text(data =  top_bottom,
             aes(label = str_wrap(primaryTitle, 40),
                 y = ifelse(g == "max",
-                               averageRating + .3, 
-                           averageRating - (.2 * ceiling(str_length(primaryTitle) / 80)))),
+                               averageRating + .4, 
+                           averageRating - (.3 * ceiling(str_length(primaryTitle) / 80)))),
             color = red, family = "frl",
             lineheight = .85, size = 3) +
   scale_color_identity() +
   scale_x_discrete(labels = labels) +
+  scale_y_continuous(limits = c(1, 10),
+                     breaks = c(1, 5, 10), labels = c(1, 5, 10)) +
   theme_minimal() +
   theme(text = element_text(family = "frl"),
         panel.grid.minor = element_blank(),
         panel.grid.major.x = element_blank(),
-        plot.title = element_textbox(size = 26, hjust = .5,
+        plot.title = element_textbox(size = 26, hjust = .5, halign = .5,
                                   face = "bold", color = gold,
                                   fill = red, linetype = 1, linewidth = .75,
+                                  lineheight = .25,
                                   padding = margin(5, 5, 0, 5), 
-                                  margin = margin(t = 5, b = 10),
+                                  margin = margin(t = 5, b = 5),
                                   r = unit(3, "pt")),
         plot.subtitle = element_textbox_simple(color = red, size = 14,
                                                margin = margin(b = 20, t = 10)),
@@ -162,12 +166,14 @@ pd_plot <- clean %>%
                                        margin = margin(b = 3),
                                        linetype = 1,
                                        r = unit(3, "pt"))) +
-  labs(title= "DON'T LOOK UP",
+  labs(title= glue("SPENCER<span style='font-size:12pt'><br>",
+                   "Where does it rank among the cast's filmography?",
+                   "</span>"),
        subtitle = glue(
-         "**Don't Look Up** received an Oscar nomination for Best Picture this year. ",
-         "With an average IMDb rating of **{pd_rating}**, this film is well above average for ",
-         "all principal cast members except Leonardo DiCaprio, for whom it is slightly below ",
-         "average. None of the cast members are nominated for an Oscar."
+         "Kristen Stewart has received an Oscar nomination this year for her role in **Spencer**. ",
+         "With an average IMDb rating of **{pd_rating}**, this film is above average among her ",
+         "filmography. This is the first role as a principal cast member for both Jack Nielen and ",
+         "Freddie Spry."
        ),
        y = "Average IMDb Rating",
        x = "Principal Cast",
@@ -182,5 +188,6 @@ pd_plot <- clean %>%
          "on March 9, 2022."
        ))
 
-ggsave(pd_plot, filename = "plots/dont_look_up.png", bg = "white",
+
+ggsave(pd_plot, filename = "plots/spencer.png", bg = "white",
        width = 9.5, height = 7.5)
