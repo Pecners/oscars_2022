@@ -8,7 +8,7 @@ library(glue)
 
 # Set movie code for plot
 
-movie_code <- "tt12536294"
+movie_code <- "tt7740496"
 
 # Pull principal cast 
 
@@ -77,14 +77,14 @@ actor_avg <- clean %>%
 # Set labels that have the actor head shots
 
 labels <- c(
-  glue("<img src='images/kristen_stewart.jpeg' height='75' style='border-radius:5px' /><br>",
-  "**Kristen Stewart**<br><span style='font-size:9pt'>(Best Actress Nominee)</span>"),
-  glue("<img src='images/timothy_spall.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Timothy Spall**"),
-  glue("<img src='images/jack_nielen.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Jack Nielen**"),
-  glue("<img src='images/freddie_spry.jpg' height='75' style='border-radius:5px' /><br>",
-  "**Freddie Spry**")
+  glue("<img src='images/bradley_cooper.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Bradley Cooper**"),
+  glue("<img src='images/cate_blanchett.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Cate Blanchett**"),
+  glue("<img src='images/toni_collette.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Toni Collette**"),
+  glue("<img src='images/willem_dafoe.jpg' height='75' style='border-radius:5px' /><br>",
+  "**Willem Dafoe**")
 )
 
 # Extract this movie average for use in subtitle
@@ -114,7 +114,7 @@ pd_plot <- clean %>%
   geom_violin(data = clean, color = red, fill = red, alpha = .1, 
               scale = "count", width = .5) +
   geom_quasirandom(alpha = .3, width = .15, size = 2.5,
-                   shape = 22, fill = red)  +
+                   shape = 22, fill = red, varwidth = TRUE)  +
   geom_segment(data = actor_avg, inherit.aes = FALSE,
                     aes(x = as.numeric(primaryName) - (.75 / 2), 
                         xend = as.numeric(primaryName) + (.75 / 2),
@@ -166,14 +166,13 @@ pd_plot <- clean %>%
                                        margin = margin(b = 3),
                                        linetype = 1,
                                        r = unit(3, "pt"))) +
-  labs(title= glue("SPENCER<span style='font-size:12pt'><br>",
+  labs(title= glue("NIGHTMARE ALLEY<span style='font-size:12pt'><br>",
                    "Where does it rank among the cast's filmography?",
                    "</span>"),
        subtitle = glue(
-         "Kristen Stewart has received an Oscar nomination this year for her role in **Spencer**. ",
-         "With an average IMDb rating of **{pd_rating}**, this film is above average among her ",
-         "filmography. This is the first role as a principal cast member for both Jack Nielen and ",
-         "Freddie Spry."
+         "**Nightmare Alley** received an Oscar nomination for Best Picture this year. ",
+         "With an average IMDb rating of **{pd_rating}**, this film ranks above average ",
+         "among the extensive filmography of the principal cast."
        ),
        y = "Average IMDb Rating",
        x = "Principal Cast",
@@ -189,5 +188,5 @@ pd_plot <- clean %>%
        ))
 
 
-ggsave(pd_plot, filename = "plots/spencer.png", bg = "white",
+ggsave(pd_plot, filename = "plots/nightmare_alley.png", bg = "white",
        width = 9.5, height = 7.5)
